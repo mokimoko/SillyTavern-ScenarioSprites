@@ -1,0 +1,94 @@
+<div class="scenario-sprites-settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>Scenario Sprites</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <!-- Description -->
+            <div class="ss-description">
+                Per-character expression sprites for scenario cards. Add your lorebook characters below — the extension
+                detects who's speaking in each message and switches to their sprite folder automatically.
+            </div>
+
+            <!-- Enable toggle -->
+            <div class="ss-toggle-row">
+                <label class="checkbox_label" for="ss-enabled">
+                    <input type="checkbox" id="ss-enabled" />
+                    <span>Enable Scenario Sprites</span>
+                </label>
+            </div>
+
+            <!-- Status -->
+            <div class="ss-status-row">
+                <span class="ss-status-label">Active Character:</span>
+                <span id="ss-current-character" class="ss-status-value">None detected</span>
+            </div>
+
+            <hr />
+
+            <!-- Add character -->
+            <div class="ss-add-row">
+                <input type="text" id="ss-new-name" class="text_pole" placeholder="Character name..." />
+                <button id="ss-add-character" class="menu_button">
+                    <i class="fa-solid fa-plus"></i> Add
+                </button>
+            </div>
+
+            <!-- Character list -->
+            <div id="ss-character-list" class="ss-character-list">
+                <!-- Populated by JS -->
+            </div>
+
+            <hr />
+
+            <!-- Debug toggle -->
+            <div class="ss-toggle-row ss-debug-row">
+                <label class="checkbox_label" for="ss-debug">
+                    <input type="checkbox" id="ss-debug" />
+                    <span>Debug mode (log detection scoring to console)</span>
+                </label>
+            </div>
+
+            <!-- Help -->
+            <div class="ss-help">
+                <details>
+                    <summary>Setup Guide</summary>
+                    <div class="ss-help-content">
+                        <p><b>1. Create sprite folders</b> — In your SillyTavern sprites directory,
+                        create a folder for each character (e.g., <code>Alice</code>, <code>Bob</code>).
+                        Place expression images inside (joy.png, sadness.png, etc.).</p>
+
+                        <p><b>2. Add characters above</b> — The name should match how the character
+                        appears in the narrative. The sprite folder defaults to the character name
+                        but can be customized.</p>
+
+                        <p><b>3. Set aliases</b> (optional) — Comma-separated alternate names,
+                        nicknames, or shortened forms. For example, if the character is "Elizabeth,"
+                        you might add <code>Liz, Beth, Lizzie</code>. Japanese honorifics like
+                        <code>-san</code>, <code>-chan</code>, etc. are handled automatically.</p>
+
+                        <p><b>4. Set pronouns</b> — Helps the extension track characters through
+                        pronoun references like "she smiled" or "he turned away". Pronouns also
+                        carry across messages — if the last message detected Alice, and the next
+                        message opens with "She sighed," it resolves to Alice.</p>
+
+                        <p><b>Detection signals (strongest → weakest):</b></p>
+                        <p><code>Alice:</code> speaker tag &gt;
+                        <code>Alice said</code> attribution &gt;
+                        <code>Alice walked</code> action &gt;
+                        <code>Alice's eyes</code> possessive &gt;
+                        <code>She smiled</code> pronoun &gt;
+                        <code>Alice</code> bare mention &gt;
+                        <code>"Hello, Alice"</code> vocative (in dialogue)</p>
+
+                        <p><b>Slash commands:</b></p>
+                        <p><code>/ss-focus Name</code> — Manually switch to a character<br />
+                        <code>/ss-detect</code> — Test detection on the latest message<br />
+                        <code>/ss-clear</code> — Clear the sprite override</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
+</div>

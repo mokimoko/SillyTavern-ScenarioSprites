@@ -1,0 +1,14 @@
+{
+    "display_name": "Scenario Sprites",
+    "loading_order": 15,
+    "requires": [],
+    "optional": [
+        "classify"
+    ],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "Cee & Claude",
+    "version": "0.2.0",
+    "homePage": "",
+    "description": "Enables per-character expression sprites in scenario-style cards where characters are defined in lorebooks rather than individual character cards."
+}
