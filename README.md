@@ -54,8 +54,7 @@ Use SillyTavern's built-in extension installer:
 - Works best with narrative-style writing where characters are named in prose
 - The **Debug mode** toggle in settings logs detection scoring to the browser console — useful for understanding why a particular character was or wasn't detected
 - Character configurations are stored per card, so different scenario cards can have different character lists
-- Compatible with the [White Lotus](https://github.com/mokimoko/SillyTavern-WhiteLotus) preset — tracker metadata is automatically stripped before detection
 
 ## Credits
 
-Made by Cee & Claude
+Inspired by [Expressions Plus](https://github.com/Tyranomaster/expressions-plus) by Tyranomaster
