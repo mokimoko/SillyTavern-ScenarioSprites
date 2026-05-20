@@ -275,8 +275,17 @@ function saveAndUpdate() {
 // DETECTION ENGINE
 // ═══════════════════════════════════════════════════════════════════════
 
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function escapeRegex(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$' + '&');
 }
 
 /**
@@ -630,27 +639,31 @@ function getLastCharacterMessage() {
 }
 
 async function processLatestMessage() {
-    const settings = ensureSettings();
-    if (!settings.enabled) return;
-    const characterList = getCharacterList();
-    if (characterList.length === 0) return;
-    const message = getLastCharacterMessage();
-    if (!message || !message.mes) return;
+    try {
+        const settings = ensureSettings();
+        if (!settings.enabled) return;
+        const characterList = getCharacterList();
+        if (characterList.length === 0) return;
+        const message = getLastCharacterMessage();
+        if (!message || !message.mes) return;
 
-    const messageKey = `${message.mes.length}-${message.mes.slice(-50)}`;
-    if (messageKey === lastProcessedMessage) return;
-    lastProcessedMessage = messageKey;
+        const messageKey = `${message.mes.length}-${message.mes.slice(-50)}`;
+        if (messageKey === lastProcessedMessage) return;
+        lastProcessedMessage = messageKey;
 
-    // Strip tracker/director metadata before detection — these contain
-    // off-screen info that would skew character scoring
-    const cleanText = stripTrackerContent(message.mes);
-    if (!cleanText) return;
+        // Strip tracker/director metadata before detection — these contain
+        // off-screen info that would skew character scoring
+        const cleanText = stripTrackerContent(message.mes);
+        if (!cleanText) return;
 
-    const detected = detectActiveCharacter(cleanText, characterList, lastDetectedCharacterName);
-    if (detected) {
-        // Update cross-message pronoun context
-        lastDetectedCharacterName = detected.name;
-        await switchToCharacter(detected);
+        const detected = detectActiveCharacter(cleanText, characterList, lastDetectedCharacterName);
+        if (detected) {
+            // Update cross-message pronoun context
+            lastDetectedCharacterName = detected.name;
+            await switchToCharacter(detected);
+        }
+    } catch (err) {
+        console.error(`${LOG_PREFIX} Error processing message:`, err);
     }
 }
 
@@ -782,7 +795,7 @@ function renderCharacterList() {
 
         card.innerHTML = `
             <div class="ss-card-header">
-                <span class="ss-card-name">${char.name}</span>
+                <span class="ss-card-name">${escapeHtml(char.name)}</span>
                 ${isActive ? '<span class="ss-card-badge">Active</span>' : ''}
                 <div class="ss-card-actions">
                     <button class="ss-btn-icon ss-btn-focus menu_button" title="Focus on this character">
@@ -796,15 +809,15 @@ function renderCharacterList() {
             <div class="ss-card-details">
                 <div class="ss-detail-row">
                     <label>Sprite Folder</label>
-                    <input type="text" class="ss-folder-input text_pole" value="${char.folder}" data-index="${i}" placeholder="Same as name" />
+                    <input type="text" class="ss-folder-input text_pole" value="${escapeHtml(char.folder)}" data-index="${i}" placeholder="Same as name" />
                 </div>
                 <div class="ss-detail-row">
                     <label>Aliases</label>
-                    <input type="text" class="ss-aliases-input text_pole" value="${(char.aliases || []).join(', ')}" data-index="${i}" placeholder="e.g. Liz, Beth, Lizzie" />
+                    <input type="text" class="ss-aliases-input text_pole" value="${escapeHtml((char.aliases || []).join(', '))}" data-index="${i}" placeholder="e.g. Liz, Beth, Lizzie" />
                 </div>
                 <div class="ss-detail-row">
                     <label>Pronouns</label>
-                    <input type="text" class="ss-pronouns-input text_pole" value="${(char.pronouns || []).join(', ')}" data-index="${i}" placeholder="e.g. she, her" />
+                    <input type="text" class="ss-pronouns-input text_pole" value="${escapeHtml((char.pronouns || []).join(', '))}" data-index="${i}" placeholder="e.g. she, her" />
                 </div>
             </div>
         `;

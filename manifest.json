@@ -9,6 +9,6 @@
     "css": "style.css",
     "author": "Cee & Claude",
     "version": "0.2.0",
-    "homePage": "",
+    "homePage": "https://github.com/mokimoko/SillyTavern-ScenarioSprites",
     "description": "Enables per-character expression sprites in scenario-style cards where characters are defined in lorebooks rather than individual character cards."
 }
