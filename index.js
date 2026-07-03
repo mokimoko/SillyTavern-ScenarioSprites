@@ -17,6 +17,16 @@ import { ARGUMENT_TYPE, SlashCommandArgument } from '../../../slash-commands/Sla
 const EXTENSION_NAME = 'Scenario Sprites';
 const LOG_PREFIX = '[ScenarioSprites]';
 
+/**
+ * Debug-gated logger. Only emits when the debugMode setting is on.
+ * Errors do NOT go through this — those always log via console.error directly.
+ */
+function debugLog(...args) {
+    if (extension_settings.scenarioSprites?.debugMode) {
+        console.debug(LOG_PREFIX, ...args);
+    }
+}
+
 /** Resolve the extension folder name from the module URL */
 const EXTENSION_FOLDER = (() => {
     try {
@@ -215,11 +225,11 @@ function getCardKey() {
     try {
         const filename = getCharaFilename();
         if (filename) {
-            console.debug(`${LOG_PREFIX} Card key via getCharaFilename: "${filename}"`);
+            debugLog(`Card key via getCharaFilename: "${filename}"`);
             return filename;
         }
     } catch (err) {
-        console.warn(`${LOG_PREFIX} getCharaFilename() failed:`, err);
+        debugLog('getCharaFilename() failed:', err);
     }
 
     // Method 2: fall back to context API
@@ -229,12 +239,12 @@ function getCardKey() {
             const char = context.characters[context.characterId];
             const key = char.avatar?.replace(/\.[^/.]+$/, '') || char.name;
             if (key) {
-                console.debug(`${LOG_PREFIX} Card key via context fallback: "${key}"`);
+                debugLog(`Card key via context fallback: "${key}"`);
                 return key;
             }
         }
     } catch (err) {
-        console.warn(`${LOG_PREFIX} Context fallback failed:`, err);
+        debugLog('Context fallback failed:', err);
     }
 
     // Method 3: use this_chid directly
@@ -242,12 +252,12 @@ function getCardKey() {
         const char = characters[this_chid];
         const key = char.avatar?.replace(/\.[^/.]+$/, '') || char.name;
         if (key) {
-            console.debug(`${LOG_PREFIX} Card key via this_chid fallback: "${key}"`);
+            debugLog(`Card key via this_chid fallback: "${key}"`);
             return key;
         }
     }
 
-    console.warn(`${LOG_PREFIX} Could not determine card key — no character selected?`);
+    debugLog('Could not determine card key — no character selected?');
     return null;
 }
 
@@ -621,7 +631,7 @@ async function switchToCharacter(character) {
 
     try {
         await executeSlashCommandsOnChatInput(`/costume ${folder}`);
-        console.log(`${LOG_PREFIX} Switched: ${prevName} → ${character.name} (folder: ${folder})`);
+        debugLog(`Switched: ${prevName} → ${character.name} (folder: ${folder})`);
         updateStatusDisplay(character.name);
     } catch (err) {
         console.error(`${LOG_PREFIX} Failed to switch costume to "${folder}":`, err);
@@ -953,5 +963,5 @@ jQuery(async () => {
         onChatChanged();
     });
 
-    console.log(`${LOG_PREFIX} Extension loaded (v0.2.0).`);
+    debugLog('Extension loaded (v0.2.0).');
 });
