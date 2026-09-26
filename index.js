@@ -873,7 +873,11 @@ async function renderSettingsPanel() {
     const settings = ensureSettings();
     const html = await renderExtensionTemplateAsync(TEMPLATE_NAMESPACE, 'settings');
 
-    const container = document.getElementById('extensions_settings2');
+    const left = document.getElementById('extensions_settings');
+    const right = document.getElementById('extensions_settings2');
+    const container = left && right
+        ? (right.children.length > left.children.length ? left : right)
+        : (left || right);
     if (!container) return;
 
     const wrapper = document.createElement('div');
