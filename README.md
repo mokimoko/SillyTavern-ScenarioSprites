@@ -58,3 +58,12 @@ Use SillyTavern's built-in extension installer:
 ## Credits
 
 Inspired by [Expressions Plus](https://github.com/Tyranomaster/expressions-plus) by Tyranomaster
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
